@@ -1,0 +1,48 @@
+name: aquagym_tracklist
+description: >
+  App per istruttori di acquagym: collega Spotify, tagga il BPM dei brani,
+  costruisci lezioni divise in riscaldamento/core/stretching e riproducile
+  a bordo vasca controllando l'app Spotify.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: '>=3.19.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.5.1
+
+  # Networking
+  http: ^1.2.2
+
+  # Spotify OAuth2 PKCE
+  crypto: ^3.0.3
+  flutter_web_auth_2: ^3.1.2
+
+  # Secure token storage
+  flutter_secure_storage: ^9.2.2
+
+  # Local persistence (vedi README per la motivazione della scelta Hive)
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Spotify App Remote SDK (controllo playback sull'app Spotify ufficiale)
+  spotify_sdk: ^3.0.2
+
+  # Utility
+  uuid: ^4.4.0
+  url_launcher: ^6.3.0
+  wakelock_plus: ^1.2.5 # tiene lo schermo acceso durante la lezione live
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
