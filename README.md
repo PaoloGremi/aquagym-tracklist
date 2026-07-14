@@ -150,9 +150,8 @@ layer, che non conosce Hive.
 
 ## TODO da decidere
 
-- Palette colori/branding definitivo (attualmente placeholder azzurro
-  "acqua" in `core/theme/app_theme.dart`).
-- Logo/icona app.
+- Logo/icona app (la palette in `core/theme/app_theme.dart` è già allineata
+  al branding "Aquamore": teal su sfondo quasi nero, tema scuro unico).
 - Se servono più istruttori sullo stesso device con librerie separate,
   serve un concetto di "profilo" non presente in questa prima versione.
 - Eventuale limite anti-ripetizione tra lezioni consecutive (oggi

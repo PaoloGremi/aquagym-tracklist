@@ -3,23 +3,31 @@ import 'package:flutter/material.dart';
 /// Tema dell'app: palette ad alto contrasto e tipografia grande, pensata
 /// per essere leggibile a distanza (bordo vasca, luce riflessa sull'acqua,
 /// istruttore che non può avvicinarsi troppo al telefono).
+///
+/// Palette ripresa dal branding "Aquamore": teal su sfondo quasi nero.
 class AppTheme {
   AppTheme._();
 
-  static const Color _seed = Color(0xFF00B8D9); // azzurro "acqua"
+  static const Color _seed = Color(0xFF1FB6A8); // teal "Aquamore"
+  static const Color _backgroundDark = Color(0xFF121417);
+  static const Color _surfaceDark = Color(0xFF1B1F22);
   static const Color warmupColor = Color(0xFFFFA000); // arancio: riscaldamento
   static const Color coreColor = Color(0xFFE53935); // rosso: core/intensità
   static const Color stretchColor = Color(0xFF43A047); // verde: stretching
 
-  static ThemeData get light {
-    final scheme = ColorScheme.fromSeed(seedColor: _seed);
+  static ThemeData get theme {
+    final scheme = ColorScheme.fromSeed(
+      seedColor: _seed,
+      brightness: Brightness.dark,
+    ).copyWith(surface: _surfaceDark);
     return ThemeData(
       useMaterial3: true,
+      brightness: Brightness.dark,
       colorScheme: scheme,
-      scaffoldBackgroundColor: scheme.surface,
+      scaffoldBackgroundColor: _backgroundDark,
       appBarTheme: AppBarTheme(
-        backgroundColor: scheme.primary,
-        foregroundColor: scheme.onPrimary,
+        backgroundColor: _backgroundDark,
+        foregroundColor: scheme.onSurface,
         centerTitle: true,
         elevation: 0,
       ),
@@ -31,6 +39,7 @@ class AppTheme {
         ),
       ),
       cardTheme: CardThemeData(
+        color: _surfaceDark,
         elevation: 1,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),

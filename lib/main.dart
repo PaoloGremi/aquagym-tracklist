@@ -35,7 +35,7 @@ class AquaGymApp extends StatelessWidget {
     return MaterialApp(
       title: 'AquaGym Tracklist',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
+      theme: AppTheme.theme,
       home: const AuthGate(),
     );
   }
