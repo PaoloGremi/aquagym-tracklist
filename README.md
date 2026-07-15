@@ -40,13 +40,13 @@ senza toccare `lib/` e `pubspec.yaml` già presenti.
 1. Vai su https://developer.spotify.com/dashboard e crea una nuova app.
 2. Redirect URI: aggiungi esattamente `aquagymtracklist://callback`
    (o lo scheme che scegli — deve coincidere con `SPOTIFY_REDIRECT_URI`
-   passato all'avvio, vedi punto 5).
+   passato all'avvio, vedi punto 6).
 3. Abilita "Android" e "iOS" nelle impostazioni dell'app:
    - Android: inserisci il package name (es. `com.tuoazienda.aquagymtracklist`,
      deve combaciare con `applicationId` in `android/app/build.gradle`) e lo
      SHA-1 del keystore di debug (`cd android && ./gradlew signingReport`).
    - iOS: inserisci il Bundle ID (deve combaciare con quello in Xcode).
-4. Copia il **Client ID**: serve al punto 5. Non serve il Client Secret
+4. Copia il **Client ID**: serve al punto 6. Non serve il Client Secret
    (il flusso PKCE non lo usa, e non va mai distribuito in un'app mobile).
 
 ## 3. Configurazione Android
@@ -105,7 +105,33 @@ repo git, secondo le istruzioni aggiornate nella documentazione ufficiale
 (https://developer.spotify.com/documentation/ios). Verificare la
 compatibilità con la versione del package `spotify_sdk` installata.
 
-## 5. Avvio dell'app
+## 5. Configurazione macOS (opzionale, solo se testi come app desktop)
+
+Le entitlements per rete in uscita (`com.apple.security.network.client`) e
+Keychain (`keychain-access-groups`, richiesto da `flutter_secure_storage`
+per salvare i token Spotify) sono già presenti in
+`macos/Runner/DebugProfile.entitlements` e `Release.entitlements`.
+
+Manca però la **firma del target Runner**, volutamente non versionata
+perché legata al tuo account Apple personale (chi fa fork del progetto ha
+un Team diverso dal mio, quindi committare il mio avrebbe rotto la build
+per chiunque altro):
+
+1. Apri il **workspace** (non lo `.xcodeproj`): `open macos/Runner.xcworkspace`.
+2. Progetto **Runner** → target **Runner** → tab **Signing & Capabilities**.
+3. Spunta **"Automatically manage signing"** e scegli il tuo **Team**
+   nell'omonimo menu (basta un Apple ID personale gratuito, non serve un
+   account developer a pagamento per lo sviluppo/test locale).
+   - Se non hai account collegati: **Xcode → Settings → Accounts → "+"**
+     e fai login.
+4. Se compare un errore "Failed to register bundle identifier", il
+   `com.example.aquagym_tracklist` di default è già in uso da qualcun
+   altro: cambialo in qualcosa di univoco (es. `com.tuonome.aquagymtracklist`)
+   e, se avevi già configurato la piattaforma iOS su Spotify, aggiorna
+   anche lì il Bundle ID.
+5. `flutter clean` prima del primo run dopo aver configurato la firma.
+
+## 6. Avvio dell'app
 
 ```bash
 flutter run \
@@ -116,7 +142,7 @@ flutter run \
 Se `SPOTIFY_CLIENT_ID` non è impostato, l'app mostra un avviso nella
 schermata di login e blocca il pulsante "Collega Spotify".
 
-## 6. Test
+## 7. Test
 
 ```bash
 flutter test
