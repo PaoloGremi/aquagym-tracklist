@@ -1,27 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/models/phase_type.dart';
 import '../../domain/models/track.dart';
+import '../providers/core_providers.dart';
 
 /// Dialog per taggare manualmente il BPM di un brano: input numerico
 /// diretto oppure calcolo tramite "tap tempo" (l'istruttore batte il tempo
 /// a schermo e l'app calcola i BPM dall'intervallo medio tra i tap).
+/// Permette anche di riprodurre il brano su Spotify mentre si tagga, per
+/// poter battere il tempo a orecchio invece che a memoria.
 ///
 /// Ritorna una mappa {'bpm': int, 'preferredPhase': PhaseType?} se
 /// confermato, altrimenti null.
-class TapTempoDialog extends StatefulWidget {
+class TapTempoDialog extends ConsumerStatefulWidget {
   final Track track;
 
   const TapTempoDialog({super.key, required this.track});
 
   @override
-  State<TapTempoDialog> createState() => _TapTempoDialogState();
+  ConsumerState<TapTempoDialog> createState() => _TapTempoDialogState();
 }
 
-class _TapTempoDialogState extends State<TapTempoDialog> {
+class _TapTempoDialogState extends ConsumerState<TapTempoDialog> {
   final List<DateTime> _taps = [];
   late final TextEditingController _bpmController;
   PhaseType? _preferredPhase;
+
+  bool _isPlaying = false;
+  bool _isLoadingPlayback = false;
+  String? _playbackError;
 
   static const int _maxTapsConsidered = 8;
 
@@ -35,8 +43,34 @@ class _TapTempoDialogState extends State<TapTempoDialog> {
 
   @override
   void dispose() {
+    // Fire-and-forget: non blocchiamo la chiusura del dialog per questo, ma
+    // evitiamo che il brano resti in riproduzione dopo aver chiuso il tagging.
+    if (_isPlaying) {
+      ref.read(spotifyRemoteServiceProvider).pause();
+    }
     _bpmController.dispose();
     super.dispose();
+  }
+
+  Future<void> _togglePlayback() async {
+    final remote = ref.read(spotifyRemoteServiceProvider);
+    setState(() {
+      _isLoadingPlayback = true;
+      _playbackError = null;
+    });
+    try {
+      if (_isPlaying) {
+        await remote.pause();
+        if (mounted) setState(() => _isPlaying = false);
+      } else {
+        await remote.play(widget.track.uri);
+        if (mounted) setState(() => _isPlaying = true);
+      }
+    } catch (e) {
+      if (mounted) setState(() => _playbackError = 'Impossibile riprodurre: $e');
+    } finally {
+      if (mounted) setState(() => _isLoadingPlayback = false);
+    }
   }
 
   void _onTap() {
@@ -74,6 +108,39 @@ class _TapTempoDialogState extends State<TapTempoDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Ascolta mentre tagghi per un tempo più preciso',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+              if (_isLoadingPlayback)
+                const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                )
+              else
+                IconButton(
+                  iconSize: 40,
+                  icon: Icon(_isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled),
+                  onPressed: _togglePlayback,
+                ),
+            ],
+          ),
+          if (_playbackError != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Text(
+                _playbackError!,
+                style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 12),
+              ),
+            ),
           TextField(
             controller: _bpmController,
             keyboardType: TextInputType.number,
