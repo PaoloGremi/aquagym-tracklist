@@ -112,24 +112,28 @@ Keychain (`keychain-access-groups`, richiesto da `flutter_secure_storage`
 per salvare i token Spotify) sono già presenti in
 `macos/Runner/DebugProfile.entitlements` e `Release.entitlements`.
 
-Manca però la **firma del target Runner**, volutamente non versionata
-perché legata al tuo account Apple personale (chi fa fork del progetto ha
-un Team diverso dal mio, quindi committare il mio avrebbe rotto la build
-per chiunque altro):
+Manca però la **firma del target Runner**, volutamente non versionata nel
+`project.pbxproj` perché legata al tuo account Apple personale (chi fa
+fork del progetto ha un Team diverso dal mio, quindi committare il mio
+avrebbe rotto la build per chiunque altro). Il Team ID va in un file
+locale, ignorato da git:
 
-1. Apri il **workspace** (non lo `.xcodeproj`): `open macos/Runner.xcworkspace`.
-2. Progetto **Runner** → target **Runner** → tab **Signing & Capabilities**.
-3. Spunta **"Automatically manage signing"** e scegli il tuo **Team**
-   nell'omonimo menu (basta un Apple ID personale gratuito, non serve un
-   account developer a pagamento per lo sviluppo/test locale).
-   - Se non hai account collegati: **Xcode → Settings → Accounts → "+"**
-     e fai login.
-4. Se compare un errore "Failed to register bundle identifier", il
+1. Trova il tuo **Team ID**: apri il **workspace**
+   (`open macos/Runner.xcworkspace`) → progetto **Runner** → target
+   **Runner** → tab **Signing & Capabilities** → spunta
+   **"Automatically manage signing"** e scegli il tuo **Team** nel menu
+   (basta un Apple ID personale gratuito, non serve un account developer a
+   pagamento per lo sviluppo/test locale; se non hai account collegati:
+   **Xcode → Settings → Accounts → "+"**).
+2. Copia `macos/Runner/Configs/Local.xcconfig.example` in
+   `macos/Runner/Configs/Local.xcconfig` (già in `.gitignore`) e incolla lì
+   il tuo Team ID.
+3. Se compare un errore "Failed to register bundle identifier", il
    `com.example.aquagym_tracklist` di default è già in uso da qualcun
    altro: cambialo in qualcosa di univoco (es. `com.tuonome.aquagymtracklist`)
    e, se avevi già configurato la piattaforma iOS su Spotify, aggiorna
    anche lì il Bundle ID.
-5. `flutter clean` prima del primo run dopo aver configurato la firma.
+4. `flutter clean` prima del primo run dopo aver configurato la firma.
 
 ## 6. Avvio dell'app
 

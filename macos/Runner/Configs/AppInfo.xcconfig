@@ -12,3 +12,7 @@ PRODUCT_BUNDLE_IDENTIFIER = com.example.aquagymTracklist
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2026 com.example. All rights reserved.
+
+// Override locale, non versionato: imposta qui il tuo DEVELOPMENT_TEAM
+// per la firma macOS. Vedi Local.xcconfig.example per le istruzioni.
+#include? "Local.xcconfig"

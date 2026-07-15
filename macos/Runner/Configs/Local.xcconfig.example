@@ -1,0 +1,8 @@
+// Copia questo file in "Local.xcconfig" (già ignorato da git) e imposta il
+// tuo Development Team per la firma locale del target Runner su macOS.
+//
+// Lo trovi in Xcode dopo aver collegato il tuo Apple ID: apri
+// macos/Runner.xcworkspace, seleziona il target Runner > Signing &
+// Capabilities > menu "Team" (oppure su
+// https://developer.apple.com/account, sezione Membership).
+DEVELOPMENT_TEAM = IL_TUO_TEAM_ID

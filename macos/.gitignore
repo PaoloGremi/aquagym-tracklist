@@ -5,3 +5,6 @@
 # Xcode-related
 **/dgph
 **/xcuserdata/
+
+# Firma locale (Team ID personale), vedi Runner/Configs/Local.xcconfig.example
+Runner/Configs/Local.xcconfig
