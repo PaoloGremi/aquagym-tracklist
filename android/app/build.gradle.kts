@@ -28,6 +28,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        // Richiesto dal manifest di spotify_sdk, non usato dal flusso OAuth dell'app (PKCE via flutter_web_auth_2)
+        manifestPlaceholders["redirectSchemeName"] = "spotify-sdk"
+        manifestPlaceholders["redirectHostName"] = "auth"
     }
 
     buildTypes {
@@ -35,6 +38,10 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }

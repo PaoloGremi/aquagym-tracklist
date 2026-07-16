@@ -4,7 +4,7 @@ description: >
   costruisci lezioni divise in riscaldamento/core/stretching e riproducile
   a bordo vasca controllando l'app Spotify.
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -22,7 +22,7 @@ dependencies:
 
   # Spotify OAuth2 PKCE
   crypto: ^3.0.3
-  flutter_web_auth_2: ^3.1.2
+  flutter_web_auth_2: ^5.0.3
 
   # Secure token storage
   flutter_secure_storage: ^9.2.2
